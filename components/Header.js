@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { signIn, useSession, signOut } from "next-auth/react";
 
 import Image from "next/image";
 import {
@@ -11,6 +12,12 @@ import {
 
 function Header() {
   const router = useRouter();
+
+  const { data: session } = useSession();
+
+  console.log(session?.user.name);
+
+  const userName = session?.user.name.split(" ")[0];
 
   return (
     <header>
@@ -42,8 +49,11 @@ function Header() {
         </div>
 
         <div className="flex items-center text-white text-xs space-x-4 md:space-x-6 mx-6 whitespace-nowrap">
-          <div className="link hidden sm:block">
-            <p>Hello, Brian Lusigi</p>
+          <div
+            className="link hidden sm:block"
+            onClick={!session ? signIn : signOut}
+          >
+            <p>{session ? `Hello, ${userName}` : "Sign in"}</p>
             <p className="text-sm font-bold">Accounts & Lists</p>
           </div>
           <div className="link hidden sm:block">
@@ -55,7 +65,10 @@ function Header() {
             <UserIcon className="h-6" />
           </div>
 
-          <div className="link relative flex items-center">
+          <div
+            className="link relative flex items-center"
+            onClick={() => router.push("/checkout")}
+          >
             <span className="absolute  right-0 top-0 md:right-5 h-4 w-4 bg-yellow-400 rounded-full text-center text-black font-bold">
               0
             </span>

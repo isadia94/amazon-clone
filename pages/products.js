@@ -2,12 +2,12 @@ import { useState } from "react";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
 import {
-  Bars3Icon,
   MagnifyingGlassIcon,
   ShoppingCartIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { signIn, useSession, signOut } from "next-auth/react";
 
 import ProductFeed from "../components/ProductFeed";
 
@@ -15,8 +15,12 @@ const Products = ({ allProducts }) => {
   const router = useRouter();
   const [query, setQuery] = useState("");
 
-  const search = (data) => {
-    return data.filter(
+  const { data: session } = useSession();
+
+  const userName = session?.user.name.split(" ")[0];
+
+  const search = (products) => {
+    return products.filter(
       ({ title, description }) =>
         title.toLowerCase().includes(query) ||
         description.toLowerCase().includes(query)
@@ -51,7 +55,7 @@ const Products = ({ allProducts }) => {
 
         <div className="flex items-center text-white text-xs space-x-4 md:space-x-6 mx-6 whitespace-nowrap">
           <div className="link hidden sm:block">
-            <p>Hello, Brian Lusigi</p>
+            <p>Hello, {userName}</p>
             <p className="text-sm font-bold">Accounts & Lists</p>
           </div>
           <div className="link hidden sm:block">
@@ -63,7 +67,10 @@ const Products = ({ allProducts }) => {
             <UserIcon className="h-6" />
           </div>
 
-          <div className="link relative flex items-center">
+          <div
+            className="link relative flex items-center"
+            onClick={() => router.push("/checkout")}
+          >
             <span className="absolute  right-0 top-0 md:right-5 h-4 w-4 bg-yellow-400 rounded-full text-center text-black font-bold">
               0
             </span>
@@ -72,7 +79,7 @@ const Products = ({ allProducts }) => {
           </div>
         </div>
       </div>
-      <ProductFeed data={search(allProducts)} />
+      <ProductFeed products={search(allProducts)} />
     </div>
   );
 };
