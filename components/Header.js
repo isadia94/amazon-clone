@@ -15,8 +15,6 @@ function Header() {
 
   const { data: session } = useSession();
 
-  console.log(session?.user.name);
-
   const userName = session?.user.name.split(" ")[0];
 
   return (
@@ -94,11 +92,16 @@ function Header() {
             <Bars3Icon className="h-6" />
             All
           </p>
-          <p className="min-w-[90px] link">Today's Deals</p>
-          <p className="min-w-[120px] link">Customer Service</p>
-          <p className="min-w-[70px] link">Registry</p>
-          <p className="min-w-[80px] link">Gift Cards</p>
-          <p>Sell</p>
+          <p className="min-w-[90px] link cursor-pointer">Today's Deals</p>
+          <p className="min-w-[120px] link cursor-pointer">Customer Service</p>
+          <p className="min-w-[70px] link cursor-pointer">Registry</p>
+          <p className="min-w-[80px] link cursor-pointer">Gift Cards</p>
+          <p
+            className=" cursor-pointer link"
+            onClick={() => router.push("/sell")}
+          >
+            Sell
+          </p>
         </div>
       </div>
     </header>

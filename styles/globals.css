@@ -11,6 +11,10 @@
     @apply cursor-pointer hover:underline
   }
 
+  .input{
+    @apply border-t-0 border-l-0 border-r-0 outline-none border-b-[0.5px] border-gray-400 
+  }
+
   
 }
 
