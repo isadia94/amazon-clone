@@ -1,19 +1,90 @@
 import Header from "../components/Header";
 import img1 from "../public/no-image.jpg";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CameraIcon } from "@heroicons/react/24/outline";
+import { db, storage } from "../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useSession } from "next-auth/react";
+import { collection, addDoc, doc, Timestamp } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { useRouter } from "next/router";
 
 import { productInputs } from "../formSource";
 
 const Sell = () => {
-  const [data, setData] = useState("false");
+  const { data: session } = useSession();
+  const router = useRouter();
+  const userName = `Posted by : ${session?.user.name}`;
+  const [newData, setNewData] = useState({ userName });
   const [file, setFile] = useState("");
+  const [per, setPer] = useState(null);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const uploadFile = () => {
+      const name = new Date().getTime() + file.name;
+      const storageRef = ref(storage, name);
+
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      // Register three observers:
+      // 1. 'state_changed' observer, called any time the state changes
+      // 2. Error observer, called on failure
+      // 3. Completion observer, called on successful completion
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          setPer(progress);
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+        },
+        () => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+
+            setNewData((prev) => ({ ...prev, img: downloadURL }));
+          });
+        }
+      );
+    };
+    file && uploadFile();
+  }, [file]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setData("true");
+
+    const docRef = await addDoc(collection(db, "products"), {
+      newData,
+    });
+
+    router.push("/");
   };
+
+  const handleInput = (e) => {
+    const id = e.target.id;
+    const value = e.target.value;
+
+    setNewData({ ...newData, userName, [id]: value });
+  };
+
   return (
     <div className="pb-8">
       <Header />
@@ -52,7 +123,12 @@ const Sell = () => {
                     <label className="font-bold px-2" htmlFor="">
                       {item.label}
                     </label>
-                    <input className="px-2 py-2 input" type={item.input} />
+                    <input
+                      id={item.id}
+                      className="px-2 py-2 input"
+                      type={item.input}
+                      onChange={handleInput}
+                    />
                   </div>
                 ))}
               </>
@@ -64,7 +140,12 @@ const Sell = () => {
                   <label className="font-bold px-2" htmlFor="">
                     {item.label}
                   </label>
-                  <input className=" px-2 py-2 input" type={item.input} />
+                  <input
+                    id={item.id}
+                    className=" px-2 py-2 input"
+                    type={item.input}
+                    onChange={handleInput}
+                  />
                 </div>
               ))}
             </div>
@@ -73,13 +154,19 @@ const Sell = () => {
                 <label className="font-bold px-2" htmlFor="">
                   {item.label}
                 </label>
-                <textarea className=" input" type={item.input} />
+                <textarea
+                  id={item.id}
+                  className=" input"
+                  type={item.input}
+                  onChange={handleInput}
+                />
               </div>
             ))}
 
             <button
-              className="px-4 py-4 mx-2 w-full mr-6 bg-amber-400 mt-4 space-x-2"
+              className="px-4 py-4 mx-2 w-full mr-6 bg-amber-400 mt-4 space-x-2 disabled:bg-slate-500"
               onClick={handleSubmit}
+              disabled={per !== null && per < 100}
             >
               Submit
             </button>

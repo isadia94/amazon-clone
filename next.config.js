@@ -7,8 +7,12 @@
 
 // module.exports = nextConfig
 
-module.exports ={
-  images:{
-    domains:["links.papareact.com", "fakestoreapi.com"]
-  }
-}
+module.exports = {
+  images: {
+    domains: [
+      "links.papareact.com",
+      "fakestoreapi.com",
+      "firebasestorage.googleapis.com",
+    ],
+  },
+};

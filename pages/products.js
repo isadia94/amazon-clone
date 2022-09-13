@@ -8,10 +8,16 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signIn, useSession, signOut } from "next-auth/react";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 import ProductFeed from "../components/ProductFeed";
 
 const Products = ({ allProducts }) => {
+  const newArray = allProducts.map((item) => {
+    return item["newData"];
+  });
+
   const router = useRouter();
   const [query, setQuery] = useState("");
 
@@ -79,7 +85,7 @@ const Products = ({ allProducts }) => {
           </div>
         </div>
       </div>
-      <ProductFeed products={search(allProducts)} />
+      <ProductFeed products={search(newArray)} />
     </div>
   );
 };
@@ -87,13 +93,14 @@ const Products = ({ allProducts }) => {
 export default Products;
 
 export async function getServerSideProps(context) {
-  const allProducts = await fetch("https://fakestoreapi.com/products").then(
-    (res) => res.json()
-  );
-
+  const querySnapshot = await getDocs(collection(db, "products"));
+  let allProducts = [];
+  querySnapshot.forEach((doc) => {
+    allProducts.push({ id: doc.id, ...doc.data() });
+  });
   return {
     props: {
-      allProducts,
+      allProducts: allProducts,
     },
   };
 }

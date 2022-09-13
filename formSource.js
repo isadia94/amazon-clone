@@ -1,21 +1,21 @@
 export const productInputs = [
   {
-    id: 1,
+    id: "category",
     label: "Category",
     input: "text",
   },
   {
-    id: 2,
+    id: "title",
     label: "Title",
     input: "text",
   },
   {
-    id: 3,
+    id: "price",
     label: "Price",
     input: "number",
   },
   {
-    id: 4,
+    id: "description",
     label: "Description",
     input: "text",
   },

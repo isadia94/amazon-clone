@@ -1,10 +1,6 @@
 import Image from "next/image";
 
 const Category = (category) => {
-  //    var splitItems = category[0].slice(0,4).map(item=>{
-  //     return item.name
-  //    })
-  //     console.log(splitItems)
   return (
     <div className="bg-white px-4 py-6 h-[200px] sm:h-[400px] relative">
       <p className="capitalize font-bold text-xl">{category[0]?.category}</p>
