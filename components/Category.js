@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Category = (category) => {
   return (
-    <div className="bg-white px-4 py-6 h-[200px] sm:h-[400px] relative">
+    <div className="bg-white px-4 py-6 h-[400px] sm:h-[400px] relative">
       <p className="capitalize font-bold text-xl">{category[0]?.category}</p>
 
       <div className="mt-6 grid grid-cols-2 gap-3">

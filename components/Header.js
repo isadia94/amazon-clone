@@ -88,7 +88,10 @@ function Header() {
           <MagnifyingGlassIcon className="h-12 text-black p-4 cursor-pointer" />
         </div>
         <div className="text-white mx-6 pt-4 flex space-x-2 sm:space-x-4 text-xs md:text-sm items-center overflow-x-scroll no-scrollbar  ">
-          <p className="flex link items-center min-w-[50px] ">
+          <p
+            className="flex link items-center min-w-[50px] "
+            onClick={() => router.push("/products")}
+          >
             <Bars3Icon className="h-6" />
             All
           </p>

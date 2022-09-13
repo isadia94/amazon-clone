@@ -15,6 +15,10 @@
     @apply border-t-0 border-l-0 border-r-0 outline-none border-b-[0.5px] border-gray-400 
   }
 
+  .button{
+    @apply bg-black outline-none text-white px-3 py-2 mt-4 w-full flex items-center justify-center font-semibold rounded-md active:bg-white 
+  }
+
   
 }
 

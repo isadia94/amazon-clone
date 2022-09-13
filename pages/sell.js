@@ -93,7 +93,7 @@ const Sell = () => {
           Advertise Products
         </p>
       </div>
-      <div className="flex mt-10 px-6 space-x-6 w-full">
+      <div className="flex flex-col md:flex-row mt-10 px-6 space-x-6">
         <div>
           <Image
             src={file ? URL.createObjectURL(file) : img1}
@@ -104,7 +104,7 @@ const Sell = () => {
           />
         </div>
         <div>
-          <form className="w-full">
+          <form className="">
             <div className="flex flex-col">
               <label className="font-bold flex items-center " htmlFor="file">
                 <CameraIcon className="h-20 cursor-pointer" />
@@ -134,7 +134,7 @@ const Sell = () => {
               </>
             </div>
 
-            <div className="flex mt-4 ">
+            <div className="flex flex-col md:flex-row mt-4 ">
               {productInputs.slice(1, 3).map((item) => (
                 <div className="flex flex-col space-x-2 " key={item.id}>
                   <label className="font-bold px-2" htmlFor="">
