@@ -6,7 +6,7 @@ import { CameraIcon } from "@heroicons/react/24/outline";
 import { db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useSession } from "next-auth/react";
-import { collection, addDoc, doc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,7 +17,7 @@ import { productInputs } from "../formSource";
 const Sell = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  const userName = `Posted by : ${session?.user.name}`;
+  const userName = session?.user.name;
   const [newData, setNewData] = useState({ userName });
   const [file, setFile] = useState("");
   const [per, setPer] = useState(null);
@@ -71,8 +71,14 @@ const Sell = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const docRef = await addDoc(collection(db, "products"), {
-      newData,
+    // const docRef = await addDoc(collection(db, "products"), {
+    //   newData,
+    // });
+
+    const docRef = doc(collection(db, "products"));
+    await setDoc(docRef, {
+      ...newData,
+      id: docRef.id,
     });
 
     router.push("/");

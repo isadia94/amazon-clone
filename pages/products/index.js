@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Header from "../components/Header";
+
 import { useRouter } from "next/router";
 import {
   MagnifyingGlassIcon,
@@ -8,14 +8,14 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signIn, useSession, signOut } from "next-auth/react";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
-import ProductFeed from "../components/ProductFeed";
+import ProductFeed from "../../components/ProductFeed";
 
 const Products = ({ allProducts }) => {
   const newArray = allProducts.map((item) => {
-    return item["newData"];
+    return item;
   });
 
   const router = useRouter();
@@ -85,7 +85,9 @@ const Products = ({ allProducts }) => {
           </div>
         </div>
       </div>
-      <ProductFeed products={search(newArray)} />
+      <div className="px-4">
+        <ProductFeed products={search(newArray)} />
+      </div>
     </div>
   );
 };
